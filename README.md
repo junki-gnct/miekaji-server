@@ -24,4 +24,4 @@ $ docker-compose stop
 - MySQL Server 5.7
 
 ## APIリファレンス
-[Wiki]()をご覧ください。
+[Wiki](./wiki)をご覧ください。
