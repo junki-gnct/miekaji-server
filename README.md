@@ -24,4 +24,4 @@ $ docker-compose stop
 - MySQL Server 5.7
 
 ## APIリファレンス
-[Wiki](./wiki)をご覧ください。
+[Wiki](https://github.com/junki-gnct/miekaji-server/wiki)をご覧ください。
