@@ -8,8 +8,9 @@ services:
             - ./mysql/initdb.d:/docker-entrypoint-initdb.d
         environment:
             MYSQL_ROOT_PASSWORD: Change_Here
-            MYSQL_USER_PASSWORD: Change_Here2
-            
+            MYSQL_USER: miekaji
+            MYSQL_PASSWORD: Change_Here2
+
     nginx:
         image: nginx:latest
         ports:

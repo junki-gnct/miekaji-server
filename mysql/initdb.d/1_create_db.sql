@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS miekaji;
+GRANT ALL ON miekaji.* TO miekaji;
