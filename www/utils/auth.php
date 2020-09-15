@@ -80,6 +80,7 @@
             $link = $this->connect();
             $query = mysqli_query($link, "SELECT pass_hash FROM AuthTable WHERE user_id='" . mysqli_real_escape_string($link, $id) . "';");
             if(!$query) {
+                mysqli_close($link);
                 return array(
                     "status"=>500,
                     "token"=>null,
@@ -98,6 +99,7 @@
             mysqli_free_result($query);
 
             if(!$isFound) {
+                mysqli_close($link);
                 return array(
                     "status"=>400,
                     "token"=>null,
@@ -110,6 +112,7 @@
 
             mysqli_query($link, "UPDATE AuthTable SET token='" . $token . "', expires=" . $exp . " WHERE user_id='" . mysqli_real_escape_string($link, $id) . "';");
 
+            mysqli_close($link);
             return array(
                 "status"=>200,
                 "token"=>$token,
@@ -121,22 +124,26 @@
             $link = $this->connect();
             $query = mysqli_query($link, "SELECT expires FROM AuthTable WHERE token='" . mysqli_real_escape_string($link, $token) . "';");
             if(!$query) {
+                mysqli_close($link);
                 return false;
             }
 
             while ($row = mysqli_fetch_assoc($query)) {
                 $expires = $row["expires"];
                 mysqli_free_result($query);
+                mysqli_close($link);
                 return $expires >= time();
             }
 
             mysqli_free_result($query);
+            mysqli_close($link);
             return false;
         }
 
         function logout($token) {
             $link = $this->connect();
             $query = mysqli_query($link, "UPDATE AuthTable SET expires=" . time() . " WHERE token='" . mysqli_real_escape_string($link, $token) . "';");
+            mysqli_close($link);
         }
 
     }
