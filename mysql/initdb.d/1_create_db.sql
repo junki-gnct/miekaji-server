@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS ProfileTable (
 CREATE TABLE IF NOT EXISTS IconTable (
     id bigint auto_increment unique,
     icon_id text,
-    icon_b64 text,
+    icon_b64 mediumtext,
     created_at datetime  default current_timestamp,
     updated_at timestamp default current_timestamp on update current_timestamp,
     index(id)
