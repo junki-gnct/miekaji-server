@@ -14,6 +14,19 @@
             return $r_str;
         }
 
+        /**
+         * ランダム文字列生成 (数字)
+         * $length: 生成する文字数
+         */
+        function makeRandInt($length) {
+            $str = range('0', '9');
+            $r_str = null;
+            for ($i = 0; $i < $length; $i++) {
+                $r_str .= $str[rand(0, count($str) - 1)];
+            }
+            return $r_str;
+        }
+
         function getNewExpireTime(){
             return time() + (7 * 24 * 60 * 60); // 1 week available.
         }
@@ -26,6 +39,16 @@
             } while($count != 0);
             mysqli_close($link);
             return $token;
+        }
+
+        function generateUID() {
+            $link = $this->connect();
+            do {
+                $uid = $this->makeRandInt(18);
+                $count = mysqli_num_rows(mysqli_query($link, "SELECT unique_id FROM ProfileTable WHERE unique_id=" . $uid));
+            } while($count != 0);
+            mysqli_close($link);
+            return $uid;
         }
 
         function register($id, $pass) {
@@ -41,8 +64,10 @@
 
             $token = $this->generateToken();
             $exp = $this->getNewExpireTime();
+            $uid = $this->generateUID();
 
             mysqli_query($link, "INSERT INTO AuthTable (user_id, pass_hash, token, expires) VALUES ('" . mysqli_real_escape_string($link, $id) . "', '" . password_hash($pass, PASSWORD_BCRYPT) . "', '" . $token . "', " . $exp . ");");
+            mysqli_query($link, "INSERT INTO ProfileTable (user_id, screen_name, unique_id, icon_id) VALUES ('" . mysqli_real_escape_string($link, $id) . "', 'Default Name', " . $uid .", '');");
 
             mysqli_close($link);
             return array(
