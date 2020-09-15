@@ -53,7 +53,7 @@
 
         function login($id, $pass) {
             $link = $this->connect();
-            $query = mysqli_query($link, "SELECT * FROM AuthTable WHERE user_id='" . mysqli_real_escape_string($link, $id) . "';");
+            $query = mysqli_query($link, "SELECT pass_hash FROM AuthTable WHERE user_id='" . mysqli_real_escape_string($link, $id) . "';");
             if(!$query) {
                 return array(
                     "status"=>500,
@@ -90,6 +90,23 @@
                 "token"=>$token,
                 "expires"=>$exp
             );
+        }
+
+        function isTokenAvailable($token) {
+            $link = $this->connect();
+            $query = mysqli_query($link, "SELECT expires FROM AuthTable WHERE token='" . mysqli_real_escape_string($link, $token) . "';");
+            if(!$query) {
+                return false;
+            }
+
+            while ($row = mysqli_fetch_assoc($query)) {
+                $expires = $row["expires"];
+                mysqli_free_result($query);
+                return $expires >= time();
+            }
+
+            mysqli_free_result($query);
+            return false;
         }
 
     }
