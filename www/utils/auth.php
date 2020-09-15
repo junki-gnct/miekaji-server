@@ -109,6 +109,11 @@
             return false;
         }
 
+        function logout($token) {
+            $link = $this->connect();
+            $query = mysqli_query($link, "UPDATE AuthTable SET expires=" . time() . " WHERE token='" . mysqli_real_escape_string($link, $token) . "';");
+        }
+
     }
 
 ?>
