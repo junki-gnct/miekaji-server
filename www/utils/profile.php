@@ -47,5 +47,22 @@
             );
         }
 
+        function updateProfile($token, $name) {
+            $link = $this->connect();
+            $query = mysqli_query($link, "SELECT user_id FROM AuthTable WHERE token='" . mysqli_real_escape_string($link, $token) . "';");
+            if(!$query) {
+                return;
+            }
+
+            $user = null;
+            while ($row = mysqli_fetch_assoc($query)) {
+                $user = $row["user_id"];
+                break;
+            }
+            mysqli_free_result($query);
+
+            mysqli_query($link, "UPDATE ProfileTable SET screen_name='" . mysqli_real_escape_string($link, $name) . "' WHERE user_id='" . mysqli_real_escape_string($link, $user) . "';");
+        }
+
     }
 ?>

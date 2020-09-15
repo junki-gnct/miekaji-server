@@ -35,13 +35,28 @@
     } else if($_SERVER["REQUEST_METHOD"] == "POST") {
         $json_obj = json_decode(file_get_contents("php://input"));
         $token = $json_obj->{"token"};
+        $name = $json_obj->{"name"};
 
-        if(empty($token)) {
+        if(empty($token) || empty($name)) {
             $r_mgr->returnBadRequest("Not enough arguments.");
             exit;
         }
-    
-        // update profile.
+
+        include_once __DIR__ . "/../utils/auth.php";
+        $auth = new AuthUtil();
+
+        if(!$auth->isTokenAvailable($token)){
+            header("HTTP/1.1 400 Bad Request");
+            $r_mgr->returnBadRequest("Your token is not available.");
+            exit;
+        }
+
+        include_once __DIR__ . "/../utils/profile.php";
+        $prof = new ProfileUtil();
+
+        $prof->updateProfile($token, $name);
+
+        $r_mgr->returnOK("Success.");
     }
 
 
