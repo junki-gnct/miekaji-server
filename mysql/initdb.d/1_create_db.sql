@@ -32,3 +32,12 @@ CREATE TABLE IF NOT EXISTS IconTable (
     updated_at timestamp default current_timestamp on update current_timestamp,
     index(id)
 );
+
+CREATE TABLE IF NOT EXISTS FriendTable (
+    id bigint auto_increment unique,
+    user_id bigint unique,
+    friends mediumtext,
+    created_at datetime  default current_timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp,
+    index(id)
+);

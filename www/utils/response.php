@@ -40,5 +40,14 @@
             echo json_encode($result, JSON_PRETTY_PRINT);
         }
 
+        function returnError($message){
+            header("HTTP/1.1 500 Internal Server Error");
+            $result = array(
+                "status"=>500,
+                "message"=>$message
+            );
+            echo json_encode($result, JSON_PRETTY_PRINT);
+        }
+
     }
 ?>
