@@ -45,6 +45,25 @@
             return -1;
         }
 
+        function getMemberIDs($gid) {
+            $link = $this->connect();
+            $members = array();
+
+            $query = mysqli_query($link, "SELECT * FROM GroupTable WHERE group_id=" . mysqli_real_escape_string($link, $gid) . ";");
+            if(!$query) {
+                mysqli_close($link);
+                return -1;
+            }
+            while ($row = mysqli_fetch_assoc($query)) {
+                array_push($members, intval($row["user_id"]));
+            }
+
+            mysqli_free_result($query);
+
+            mysqli_close($link);
+            return $members;
+        }
+
         function isGroupFound($gid) {
             $link = $this->connect();
             $count = mysqli_num_rows(mysqli_query($link, "SELECT group_id FROM FunTable WHERE group_id=" . $gid));
@@ -79,5 +98,54 @@
             mysqli_query($link, "UPDATE GroupTable SET group_id=-1 WHERE user_id=" . $uid);
             mysqli_close($link);
             return true;
+        }
+
+        function getGroupInfo($token) {
+            $uid = $this->getProfile($token)["ID"];
+            $gid = $this->getUserGroupID($uid);
+            if($gid == -1) {
+                $mids = array();
+            } else {
+                $mids = $this->getMemberIDs($gid);
+            }
+
+            $members = array();
+            foreach($mids as $mid) {
+                array_push($members, $this->getProfileByUID($mid));
+            }
+            
+            $name = null;
+            $state = -1;
+            $created_at = "";
+            $owner = array(
+                "ID"=>-1,
+                "name"=>null,
+                "icon_id"=>null
+            );
+
+            $link = $this->connect();
+
+            $query = mysqli_query($link, "SELECT * FROM FunTable WHERE group_id=" . mysqli_real_escape_string($link, $gid) . ";");
+            if(!$query) {
+                mysqli_close($link);
+                return -1;
+            }
+            while ($row = mysqli_fetch_assoc($query)) {
+                $name = $row["screen_name"];
+                $state = intval($row["fun_state"]);
+                $created_at = $row["created_at"];
+                $owner = $this->getProfileByUID($row["owner_id"]);
+            }
+            mysqli_free_result($query);
+
+            mysqli_close($link);
+
+            return array(
+                "ID"=>$gid,
+                "name"=>$name,
+                "state"=>$state,
+                "created_at"=>$created_at,
+                "members"=>$members
+            );
         }
     }
