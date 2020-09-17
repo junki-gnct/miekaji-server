@@ -57,6 +57,38 @@
             );
         }
 
+        function getProfileByID($id) {
+            $link = $this->connect();
+            $query = mysqli_query($link, "SELECT * FROM ProfileTable WHERE user_id='" . mysqli_real_escape_string($link, $id) . "';");
+            if(!$query) {
+                mysqli_close($link);
+                return array(
+                    "ID"=>-1,
+                    "name"=>null,
+                    "icon_id"=>null
+                );
+            }
+
+            while ($row = mysqli_fetch_assoc($query)) {
+                $prof = array(
+                    "ID"=>intval($row["unique_id"]),
+                    "name"=>$row["screen_name"],
+                    "icon_id"=>$row["icon_id"]
+                );
+                mysqli_free_result($query);
+                mysqli_close($link);
+                return $prof;
+            }
+
+            mysqli_free_result($query);
+            mysqli_close($link);
+            return array(
+                "ID"=>-1,
+                "name"=>null,
+                "icon_id"=>null
+            );
+        }
+
         function getIconID($token) {
             $link = $this->connect();
             $query = mysqli_query($link, "SELECT user_id FROM AuthTable WHERE token='" . mysqli_real_escape_string($link, $token) . "';");
