@@ -23,7 +23,7 @@
 
     include_once __DIR__ . "/../utils/friend.php";
     $friend = new FriendUtil();
-    $res = $friend->addFriend($token, $id);
+    $res = $friend->removeFriend($token, $id);
 
     if ($res == 0) {
         $r_mgr->returnOK("Success.");
@@ -34,7 +34,7 @@
     } else if($res == -3) {
         $r_mgr->returnBadRequest("User is same.");
     } else if($res == -4) {
-        $r_mgr->returnBadRequest("User is already in friends.");
+        $r_mgr->returnBadRequest("User is not in friends.");
     }
 
 
