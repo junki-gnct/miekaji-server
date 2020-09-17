@@ -45,6 +45,13 @@
             return -1;
         }
 
+        function isGroupFound($gid) {
+            $link = $this->connect();
+            $count = mysqli_num_rows(mysqli_query($link, "SELECT group_id FROM FunTable WHERE group_id=" . $gid));
+            mysqli_close($link);
+            return ($count != 0);
+        }
+
         function createGroup($token, $name) {
             $uid = $this->getProfile($token)["ID"];
             $gid = $this->generateGroupID();
@@ -53,5 +60,16 @@
             mysqli_query($link, "UPDATE GroupTable SET group_id=" . $gid . " WHERE user_id=" . $uid);
             mysqli_close($link);
             return $gid;
+        }
+
+        function joinGroup($token, $id) {
+            $uid = $this->getProfile($token)["ID"];
+            if(!$this->isGroupFound($id)) {
+                return false;
+            }
+            $link = $this->connect();
+            mysqli_query($link, "UPDATE GroupTable SET group_id=" . $id . " WHERE user_id=" . $uid);
+            mysqli_close($link);
+            return true;
         }
     }
