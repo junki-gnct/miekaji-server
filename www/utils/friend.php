@@ -2,6 +2,29 @@
     include_once __DIR__ . '/profile.php';
     class FriendUtil extends ProfileUtil {
 
+        function getFriends($token) {
+            $uid = $this->getProfile($token)["ID"];
+
+            $user_friends = NULL;
+            $link = $this->connect();
+            $query = mysqli_query($link, "SELECT * FROM FriendTable WHERE user_id=" . mysqli_real_escape_string($link, $uid) . ";");
+            if(!$query) {
+                mysqli_close($link);
+                return -1;
+            }
+            while ($row = mysqli_fetch_assoc($query)) {
+                $user_friends = explode(",", $row["friends"]);
+            }
+            mysqli_free_result($query);
+
+            $friends = array();
+            foreach($user_friends as $f_uid) {
+                array_push($friends, $this->getProfileByUID($f_uid));
+            }
+
+            return array("users"=>$friends);
+        }
+
         function addFriend($token, $user) {
             $uid = $this->getProfile($token)["ID"];
             $target_uid = $this->getProfileByID($user)["ID"];
