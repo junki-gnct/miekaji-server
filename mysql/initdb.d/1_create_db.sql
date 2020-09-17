@@ -41,3 +41,23 @@ CREATE TABLE IF NOT EXISTS FriendTable (
     updated_at timestamp default current_timestamp on update current_timestamp,
     index(id)
 );
+
+CREATE TABLE IF NOT EXISTS FunTable (
+    id bigint auto_increment unique,
+    group_id int unique,
+    owner_id bigint,
+    fun_state int,
+    screen_name text,
+    created_at datetime  default current_timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp,
+    index(id)
+);
+
+CREATE TABLE IF NOT EXISTS GroupTable (
+    id bigint auto_increment unique,
+    group_id int,
+    user_id bigint unique,
+    created_at datetime  default current_timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp,
+    index(id)
+);

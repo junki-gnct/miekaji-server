@@ -68,6 +68,7 @@
             mysqli_query($link, "INSERT INTO AuthTable (user_id, pass_hash, token, expires) VALUES ('" . mysqli_real_escape_string($link, $id) . "', '" . password_hash($pass, PASSWORD_BCRYPT) . "', '" . $token . "', " . $exp . ");");
             mysqli_query($link, "INSERT INTO ProfileTable (user_id, screen_name, unique_id, icon_id) VALUES ('" . mysqli_real_escape_string($link, $id) . "', 'Default Name', " . $uid .", '');");
             mysqli_query($link, "INSERT INTO FriendTable (user_id, friends) VALUES (" . $uid . ", '');");
+            mysqli_query($link, "INSERT INTO GroupTable (user_id, group_id) VALUES (" . $uid . ", -1);");
 
             mysqli_close($link);
             return array(

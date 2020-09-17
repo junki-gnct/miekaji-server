@@ -22,6 +22,7 @@
                 array_push($friends, $this->getProfileByUID($f_uid));
             }
 
+            mysqli_close($link);
             return array("users"=>$friends);
         }
 
