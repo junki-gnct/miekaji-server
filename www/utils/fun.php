@@ -72,4 +72,12 @@
             mysqli_close($link);
             return true;
         }
+
+        function leaveGroup($token) {
+            $uid = $this->getProfile($token)["ID"];
+            $link = $this->connect();
+            mysqli_query($link, "UPDATE GroupTable SET group_id=-1 WHERE user_id=" . $uid);
+            mysqli_close($link);
+            return true;
+        }
     }
