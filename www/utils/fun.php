@@ -92,6 +92,31 @@
             return true;
         }
 
+        function addToGroup($token, $uid) {
+            $uidd = $this->getProfile($token)["ID"];
+            $gid = $this->getUserGroupID($uidd);
+            if($gid == -1) {
+                return false;
+            }
+            $link = $this->connect();
+            mysqli_query($link, "UPDATE GroupTable SET group_id=" . $gid . " WHERE user_id=" . $uid);
+            mysqli_close($link);
+            return true;
+        }
+
+        function removeFromGroup($token, $uid) {
+            $uidd = $this->getProfile($token)["ID"];
+            $gid = $this->getUserGroupID($uidd);
+            $gid2 = $this->getUserGroupID($uid);
+            if($gid != $gid2) {
+                return false;
+            }
+            $link = $this->connect();
+            mysqli_query($link, "UPDATE GroupTable SET group_id=-1 WHERE user_id=" . $uid);
+            mysqli_close($link);
+            return true;
+        }
+
         function leaveGroup($token) {
             $uid = $this->getProfile($token)["ID"];
             $link = $this->connect();
@@ -144,6 +169,7 @@
                 "ID"=>$gid,
                 "name"=>$name,
                 "state"=>$state,
+                "owner"=>$owner,
                 "created_at"=>$created_at,
                 "members"=>$members
             );
