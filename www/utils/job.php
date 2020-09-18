@@ -106,6 +106,7 @@
                 array_push($histories, array(
                     "ID"=>intval($row["job_id"]),
                     "category"=>$category,
+                    "date"=>$row["created_at"],
                     "motion"=>floatval($row["motion"]),
                     "time"=>floatval($row["m_time"]),
                     "value"=>floatval($row["motion"]) * floatval($row["m_time"]) * $category["weight"]
