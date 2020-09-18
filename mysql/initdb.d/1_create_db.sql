@@ -61,3 +61,27 @@ CREATE TABLE IF NOT EXISTS GroupTable (
     updated_at timestamp default current_timestamp on update current_timestamp,
     index(id)
 );
+
+CREATE TABLE IF NOT EXISTS JobCategoryTable (
+    id bigint auto_increment unique,
+    category_id bigint unique,
+    screen_name text,
+    job_weight float,
+    detail text,
+    isActive boolean,
+    created_at datetime  default current_timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp,
+    index(id)
+);
+
+CREATE TABLE IF NOT EXISTS JobTable (
+    id bigint auto_increment unique,
+    job_id bigint unique,
+    category_id bigint,
+    user_id bigint,
+    motion float,
+    m_time float,
+    created_at datetime  default current_timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp,
+    index(id)
+);
