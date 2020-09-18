@@ -1,7 +1,8 @@
-CREATE DATABASE IF NOT EXISTS miekaji;
+CREATE DATABASE IF NOT EXISTS miekaji CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 GRANT ALL ON miekaji.* TO miekaji;
 
 USE miekaji;
+
 CREATE TABLE IF NOT EXISTS AuthTable (
     id bigint auto_increment unique, 
     user_id text, 
