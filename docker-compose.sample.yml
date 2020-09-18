@@ -10,6 +10,7 @@ services:
             MYSQL_ROOT_PASSWORD: Change_Here
             MYSQL_USER: miekaji
             MYSQL_PASSWORD: Change_Here2
+            TZ: "Asia/Tokyo"
 
     nginx:
         image: nginx:latest
