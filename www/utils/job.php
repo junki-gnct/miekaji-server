@@ -25,6 +25,16 @@
             return $uid;
         }
 
+        function generateJobID() {
+            $link = $this->connect();
+            do {
+                $uid = $this->makeRandInt(12);
+                $count = mysqli_num_rows(mysqli_query($link, "SELECT job_id  FROM JobTable WHERE job_id=" . $uid));
+            } while($count != 0);
+            mysqli_close($link);
+            return $uid;
+        }
+
         function createJobCategory($name, $weight, $detail) {
             $cid = $this->generateCategoryID();
             $link = $this->connect();
@@ -68,6 +78,19 @@
             mysqli_query($link, "UPDATE JobCategoryTable SET " . implode(", ", $update_values) . " WHERE category_id=" . mysqli_real_escape_string($link, $category) . ";");
             mysqli_close($link);
             return 0;
+        }
+
+        function addJobDetail($token, $category, $motion, $time) {
+            if(!$this->isCategoryFound($category)) {
+                return false;
+            }
+            $jid = $this->generateJobID();
+            $uid = $this->getProfile($token)["ID"];
+
+            $link = $this->connect();
+            mysqli_query($link, "INSERT INTO JobTable (job_id, category_id, user_id, motion, m_time) VALUES (" . $jid . ", " . mysqli_real_escape_string($link, $category) . ", " . $uid . ", " . mysqli_real_escape_string($link, $motion) . ", " . mysqli_real_escape_string($link, $time) . ");");
+            mysqli_close($link);
+            return true;
         }
 
         function listJobCategory() {

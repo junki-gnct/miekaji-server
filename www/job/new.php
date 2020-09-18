@@ -5,11 +5,10 @@
     $json_obj = json_decode(file_get_contents("php://input"));
     $token = $json_obj->{"token"};
     $category = $json_obj->{"category"};
-    $name = $json_obj->{"name"};
-    $weight = $json_obj->{"weight"};
-    $detail = $json_obj->{"detail"};
+    $motion = $json_obj->{"motion"};
+    $time = $json_obj->{"time"};
 
-    if(empty($token) || empty($category) || (empty($name) && empty($weight) && empty($detail))) {
+    if(empty($token) || empty($category) || empty($motion) || empty($time)) {
         header("HTTP/1.1 400 Bad Request");
         $r_mgr->returnBadRequest("Not enough arguments.");
         exit;
@@ -27,11 +26,9 @@
     include_once __DIR__ . "/../utils/job.php";
     $job = new JobUtil();
 
-    $re = $job->editJobCategory($category, $name, $weight, $detail);
-
-    if($re == 0) {
+    if($job->addJobDetail($token, $category, $motion, $time)) {
         $r_mgr->returnOK("Success.");
-    } else if($re == -1) {
+    } else {
         $r_mgr->returnBadRequest("Category is not found.");
     }
-    
+
