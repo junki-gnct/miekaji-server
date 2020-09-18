@@ -49,6 +49,13 @@
             return ($count != 0);
         }
 
+        function isJobFound($id) {
+            $link = $this->connect();
+            $count = mysqli_num_rows(mysqli_query($link, "SELECT job_id FROM JobTable WHERE job_id=" . mysqli_real_escape_string($link, $id)));
+            mysqli_close($link);
+            return ($count != 0);
+        }
+
         function removeJobCategory($id) {
             if(!$this->isCategoryFound($id)) {
                 return false;
@@ -89,6 +96,17 @@
 
             $link = $this->connect();
             mysqli_query($link, "INSERT INTO JobTable (job_id, category_id, user_id, motion, m_time) VALUES (" . $jid . ", " . mysqli_real_escape_string($link, $category) . ", " . $uid . ", " . mysqli_real_escape_string($link, $motion) . ", " . mysqli_real_escape_string($link, $time) . ");");
+            mysqli_close($link);
+            return true;
+        }
+
+        function removeJob($id) {
+            if(!$this->isJobFound($id)) {
+                return false;
+            }
+
+            $link = $this->connect();
+            mysqli_query($link, "DELETE FROM JobTable WHERE job_id=" . mysqli_real_escape_string($link, $id) . ";");
             mysqli_close($link);
             return true;
         }
