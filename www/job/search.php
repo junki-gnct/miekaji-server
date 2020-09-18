@@ -3,8 +3,9 @@
     $r_mgr = new ResponseManager();
 
     $token = $_GET['token'];
+    $id = $_GET['id'];
 
-    if(empty($token)) {
+    if(empty($token) || empty($id)) {
         header("HTTP/1.1 400 Bad Request");
         $r_mgr->returnResponse(array("histories"=>array()));
         exit;
@@ -22,4 +23,4 @@
     include_once __DIR__ . "/../utils/job.php";
     $job = new JobUtil();
 
-    $r_mgr->returnResponse(array("histories"=>$job->getJobHistory($token)));
+    $r_mgr->returnResponse(array("histories"=>$job->getJobHistoryByUID($id)));
