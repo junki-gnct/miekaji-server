@@ -30,7 +30,25 @@
             $link = $this->connect();
             mysqli_query($link, "INSERT INTO JobCategoryTable (category_id, screen_name, job_weight, detail, isActive) VALUES (" . $cid . ", '" . mysqli_real_escape_string($link, $name) . "', " . mysqli_real_escape_string($link, $weight) . ", '" . mysqli_real_escape_string($link, $detail) . "', true);");
             mysqli_close($link);
-            return $gid;
+        }
+
+        function isCategoryFound($id) {
+            $link = $this->connect();
+            $count = mysqli_num_rows(mysqli_query($link, "SELECT category_id FROM JobCategoryTable WHERE isActive=true AND category_id=" . mysqli_real_escape_string($link, $id)));
+            mysqli_close($link);
+            return ($count != 0);
+        }
+
+        function removeJobCategory($id) {
+            $cid = $this->generateCategoryID();
+            if(!$this->isCategoryFound($id)) {
+                return false;
+            }
+
+            $link = $this->connect();
+            mysqli_query($link, "UPDATE JobCategoryTable SET isActive=false WHERE category_id=" . mysqli_real_escape_string($link, $id) . ";");
+            mysqli_close($link);
+            return true;
         }
 
     }
