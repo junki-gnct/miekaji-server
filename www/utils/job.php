@@ -51,4 +51,27 @@
             return true;
         }
 
+        function listJobCategory() {
+            $link = $this->connect();
+            $query = mysqli_query($link, "SELECT * FROM JobCategoryTable WHERE isActive=true;");
+            if(!$query) {
+                mysqli_close($link);
+                return array();
+            }
+
+            $categories = array();
+            while ($row = mysqli_fetch_assoc($query)) {
+                array_push($categories, array(
+                    "ID"=>intval($row["category_id"]),
+                    "name"=>$row["screen_name"],
+                    "weight"=>floatval($row["job_weight"]),
+                    "detail"=>$row["detail"]
+                ));
+            }
+            mysqli_free_result($query);
+            mysqli_close($link);
+
+            return $categories;
+        }
+
     }
