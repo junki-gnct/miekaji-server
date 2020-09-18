@@ -40,7 +40,6 @@
         }
 
         function removeJobCategory($id) {
-            $cid = $this->generateCategoryID();
             if(!$this->isCategoryFound($id)) {
                 return false;
             }
@@ -49,6 +48,26 @@
             mysqli_query($link, "UPDATE JobCategoryTable SET isActive=false WHERE category_id=" . mysqli_real_escape_string($link, $id) . ";");
             mysqli_close($link);
             return true;
+        }
+
+        function editJobCategory($category, $name, $weight, $detail) {
+            if(!$this->isCategoryFound($category)) {
+                return -1;
+            }
+
+            $link = $this->connect();
+            $update_values = array(
+                $name == NULL ? "" : "screen_name='" . mysqli_real_escape_string($link, $name) . "'",
+                $weight == NULL ? "" : "job_weight=" . mysqli_real_escape_string($link, $weight),
+                $detail == NULL ? "" : "detail='" . mysqli_real_escape_string($link, $detail) . "'"
+            );
+
+            $update_values = array_diff($update_values, array(""));
+            $update_values = array_values($update_values);
+
+            mysqli_query($link, "UPDATE JobCategoryTable SET " . implode(", ", $update_values) . " WHERE category_id=" . mysqli_real_escape_string($link, $category) . ";");
+            mysqli_close($link);
+            return 0;
         }
 
         function listJobCategory() {
