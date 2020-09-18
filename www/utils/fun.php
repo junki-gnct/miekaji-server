@@ -81,6 +81,17 @@
             return $gid;
         }
 
+        function editGroupState($token, $state) {
+            $uid = $this->getProfile($token)["ID"];
+            $gid = $this->getUserGroupID($uid);
+            if($gid == -1) return false;
+
+            $link = $this->connect();
+            mysqli_query($link, "UPDATE FunTable SET fun_state=" . mysqli_real_escape_string($link, $state) . " WHERE group_id=" . $gid);
+            mysqli_close($link);
+            return true;
+        }
+
         function joinGroup($token, $id) {
             $uid = $this->getProfile($token)["ID"];
             if(!$this->isGroupFound($id)) {
