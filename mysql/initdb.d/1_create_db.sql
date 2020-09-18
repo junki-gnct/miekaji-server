@@ -1,7 +1,8 @@
-CREATE DATABASE IF NOT EXISTS miekaji;
+CREATE DATABASE IF NOT EXISTS miekaji CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 GRANT ALL ON miekaji.* TO miekaji;
 
 USE miekaji;
+
 CREATE TABLE IF NOT EXISTS AuthTable (
     id bigint auto_increment unique, 
     user_id text, 
@@ -57,6 +58,30 @@ CREATE TABLE IF NOT EXISTS GroupTable (
     id bigint auto_increment unique,
     group_id int,
     user_id bigint unique,
+    created_at datetime  default current_timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp,
+    index(id)
+);
+
+CREATE TABLE IF NOT EXISTS JobCategoryTable (
+    id bigint auto_increment unique,
+    category_id bigint unique,
+    screen_name text,
+    job_weight float,
+    detail text,
+    isActive boolean,
+    created_at datetime  default current_timestamp,
+    updated_at timestamp default current_timestamp on update current_timestamp,
+    index(id)
+);
+
+CREATE TABLE IF NOT EXISTS JobTable (
+    id bigint auto_increment unique,
+    job_id bigint unique,
+    category_id bigint,
+    user_id bigint,
+    motion float,
+    m_time float,
     created_at datetime  default current_timestamp,
     updated_at timestamp default current_timestamp on update current_timestamp,
     index(id)

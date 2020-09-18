@@ -2,7 +2,7 @@
     class ResponseManager {
 
         function returnResponse($response){
-            echo json_encode($response, JSON_PRETTY_PRINT);
+            echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
         function returnForbidden(){
@@ -11,7 +11,7 @@
                 "status"=>403,
                 "message"=>"You are not allowed to access this endpoint."
             );
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
         
         function returnBadRequest($message) {
@@ -20,7 +20,7 @@
                 "status"=>400,
                 "message"=>$message
             );
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
         function returnOK($message) {
@@ -28,7 +28,7 @@
                 "status"=>200,
                 "message"=>$message
             );
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
         function returnUnavailable($message){
@@ -37,7 +37,7 @@
                 "status"=>503,
                 "message"=>$message
             );
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
         function returnError($message){
@@ -46,7 +46,7 @@
                 "status"=>500,
                 "message"=>$message
             );
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
     }
