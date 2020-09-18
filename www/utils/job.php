@@ -87,6 +87,34 @@
             return 0;
         }
 
+        function getJobHistory($token) {
+            return $this->getJobHistoryByUID($this->getProfile($token)["ID"]);
+        }
+
+        function getJobHistoryByUID($uid) {
+            $histories = array();
+
+            $link = $this->connect();
+            $query = mysqli_query($link, "SELECT * FROM JobTable WHERE user_id=" . mysqli_real_escape_string($link, $uid));
+            if(!$query) {
+                mysqli_close($link);
+                return array();
+            }
+
+            while ($row = mysqli_fetch_assoc($query)) {
+                $category = $this->getCategoryInfo($row["category_id"]);
+                array_push($histories, array(
+                    "ID"=>intval($row["job_id"]),
+                    "category"=>$category,
+                    "motion"=>floatval($row["motion"]),
+                    "time"=>floatval($row["m_time"]),
+                    "value"=>floatval($row["motion"]) * floatval($row["m_time"]) * $category["weight"]
+                ));
+            }
+
+            return $histories;
+        }
+
         function addJobDetail($token, $category, $motion, $time) {
             if(!$this->isCategoryFound($category)) {
                 return false;
@@ -109,6 +137,37 @@
             mysqli_query($link, "DELETE FROM JobTable WHERE job_id=" . mysqli_real_escape_string($link, $id) . ";");
             mysqli_close($link);
             return true;
+        }
+
+        function getCategoryInfo($id) {
+            $link = $this->connect();
+            $query = mysqli_query($link, "SELECT * FROM JobCategoryTable WHERE category_id=" . mysqli_real_escape_string($link, $id));
+            if(!$query) {
+                mysqli_close($link);
+                return array();
+            }
+
+            $categories = array();
+            while ($row = mysqli_fetch_assoc($query)) {
+                $category = array(
+                    "ID"=>intval($row["category_id"]),
+                    "name"=>$row["screen_name"],
+                    "weight"=>floatval($row["job_weight"]),
+                    "detail"=>$row["detail"]
+                );
+                mysqli_free_result($query);
+                mysqli_close($link);    
+                return $category;
+            }
+            mysqli_free_result($query);
+            mysqli_close($link);
+
+            return array(
+                "ID"=>-1,
+                "name"=>null,
+                "weight"=>0,
+                "detail"=>null
+            );
         }
 
         function listJobCategory() {
