@@ -156,7 +156,8 @@
             $owner = array(
                 "ID"=>-1,
                 "name"=>null,
-                "icon_id"=>null
+                "icon_id"=>null,
+                "sum"=>0
             );
 
             $link = $this->connect();

@@ -19,7 +19,9 @@
 
             $friends = array();
             foreach($user_friends as $f_uid) {
-                array_push($friends, $this->getProfileByUID($f_uid));
+                if(!empty($f_uid)) {
+                    array_push($friends, $this->getProfileByUID($f_uid));
+                }
             }
 
             mysqli_close($link);

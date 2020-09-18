@@ -25,6 +25,31 @@
             return $token;
         }
 
+        function getJobValueSum($uid) {
+            $link = $this->connect();
+            $query = mysqli_query($link, "SELECT category_id, motion, m_time FROM JobTable WHERE user_id=" . mysqli_real_escape_string($link, $uid) . ";");
+            if(!$query) {
+                mysqli_close($link);
+                return 0.0;
+            }
+
+            $sum = 0.0;
+            $category = array(); // for caching.
+
+            while ($row = mysqli_fetch_assoc($query)) {
+                if(!array_key_exists($row["category_id"], $category)) {
+                    include_once __DIR__ . '/job.php';
+                    $ju = new JobUtil();
+                    $category[$row["category_id"]] = $ju->getCategoryInfo($row["category_id"]);
+                }
+
+                $sum = floatval($row["motion"]) * floatval($row["m_time"]) * $category[$row["category_id"]]["weight"];
+            }
+
+            mysqli_close($link);
+            return $sum;
+        }
+
         function getProfileByUID($uid) {
             $link = $this->connect();
             $query = mysqli_query($link, "SELECT * FROM ProfileTable WHERE unique_id=" . mysqli_real_escape_string($link, $uid) . ";");
@@ -33,7 +58,8 @@
                 return array(
                     "ID"=>-1,
                     "name"=>null,
-                    "icon_id"=>null
+                    "icon_id"=>null,
+                    "sum"=>0
                 );
             }
 
@@ -41,7 +67,8 @@
                 $prof = array(
                     "ID"=>intval($row["unique_id"]),
                     "name"=>$row["screen_name"],
-                    "icon_id"=>$row["icon_id"]
+                    "icon_id"=>$row["icon_id"],
+                    "sum"=>$this->getJobValueSum($row["unique_id"])
                 );
                 mysqli_free_result($query);
                 mysqli_close($link);
@@ -53,7 +80,8 @@
             return array(
                 "ID"=>-1,
                 "name"=>null,
-                "icon_id"=>null
+                "icon_id"=>null,
+                "sum"=>0
             );
         }
 
@@ -65,7 +93,8 @@
                 return array(
                     "ID"=>-1,
                     "name"=>null,
-                    "icon_id"=>null
+                    "icon_id"=>null,
+                    "sum"=>0
                 );
             }
 
@@ -73,7 +102,8 @@
                 $prof = array(
                     "ID"=>intval($row["unique_id"]),
                     "name"=>$row["screen_name"],
-                    "icon_id"=>$row["icon_id"]
+                    "icon_id"=>$row["icon_id"],
+                    "sum"=>$this->getJobValueSum($row["unique_id"])
                 );
                 mysqli_free_result($query);
                 mysqli_close($link);
@@ -85,7 +115,8 @@
             return array(
                 "ID"=>-1,
                 "name"=>null,
-                "icon_id"=>null
+                "icon_id"=>null,
+                "sum"=>0
             );
         }
 
@@ -130,7 +161,8 @@
                 return array(
                     "ID"=>-1,
                     "name"=>null,
-                    "icon_id"=>null
+                    "icon_id"=>null,
+                    "sum"=>0
                 );
             }
 
@@ -147,7 +179,8 @@
                 return array(
                     "ID"=>-1,
                     "name"=>null,
-                    "icon_id"=>null
+                    "icon_id"=>null,
+                    "sum"=>0
                 );
             }
 
@@ -155,7 +188,8 @@
                 $prof = array(
                     "ID"=>intval($row["unique_id"]),
                     "name"=>$row["screen_name"],
-                    "icon_id"=>$row["icon_id"]
+                    "icon_id"=>$row["icon_id"],
+                    "sum"=>$this->getJobValueSum($row["unique_id"])
                 );
                 mysqli_free_result($query);
                 mysqli_close($link);
@@ -167,7 +201,8 @@
             return array(
                 "ID"=>-1,
                 "name"=>null,
-                "icon_id"=>null
+                "icon_id"=>null,
+                "sum"=>0
             );
         }
 
