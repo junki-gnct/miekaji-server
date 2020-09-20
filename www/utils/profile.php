@@ -43,7 +43,7 @@
                     $category[$row["category_id"]] = $ju->getCategoryInfo($row["category_id"]);
                 }
 
-                $sum = floatval($row["motion"]) * floatval($row["m_time"]) * $category[$row["category_id"]]["weight"];
+                $sum += floatval($row["motion"]) * floatval($row["m_time"]) * $category[$row["category_id"]]["weight"];
             }
 
             mysqli_close($link);

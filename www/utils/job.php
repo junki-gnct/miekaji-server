@@ -116,6 +116,38 @@
             return $histories;
         }
 
+        function getTodayJobHistory($token) {
+            return $this->getTodayJobHistoryByUID($this->getProfile($token)["ID"]);
+        }
+
+        function getTodayJobHistoryByUID($uid) {
+            $histories = array();
+
+            $link = $this->connect();
+            $today = date("Y-m-d", time());
+            $tomorrow = date("Y-m-d", time() + 24* 60* 60);
+            
+            $query = mysqli_query($link, "SELECT * FROM JobTable WHERE user_id=" . mysqli_real_escape_string($link, $uid) . " AND (created_at BETWEEN '" . $today . "' AND '" . $tomorrow . "')");
+            if(!$query) {
+                mysqli_close($link);
+                return array();
+            }
+
+            while ($row = mysqli_fetch_assoc($query)) {
+                $category = $this->getCategoryInfo($row["category_id"]);
+                array_push($histories, array(
+                    "ID"=>intval($row["job_id"]),
+                    "category"=>$category,
+                    "date"=>$row["created_at"],
+                    "motion"=>floatval($row["motion"]),
+                    "time"=>floatval($row["m_time"]),
+                    "value"=>floatval($row["motion"]) * floatval($row["m_time"]) * $category["weight"]
+                ));
+            }
+
+            return $histories;
+        }
+
         function addJobDetail($token, $category, $motion, $time) {
             if(!$this->isCategoryFound($category)) {
                 return false;
