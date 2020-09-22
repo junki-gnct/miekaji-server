@@ -8,7 +8,7 @@
     $motion = $json_obj->{"motion"};
     $time = $json_obj->{"time"};
 
-    if(empty($token) || empty($category) || empty($motion) || empty($time)) {
+    if(empty($token) || empty($category) || !isset($motion) || !isset($time)) {
         header("HTTP/1.1 400 Bad Request");
         $r_mgr->returnBadRequest("Not enough arguments.");
         exit;

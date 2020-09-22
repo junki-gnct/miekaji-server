@@ -26,8 +26,49 @@
         }
 
         function getJobValueSum($uid) {
+            $this_month = date("Y-m", time()) . "-01";
+
+            $next_month_y = intval(date("Y", time()));
+            $next_month_i = intval(date("m", time())) + 1;
+            if($next_month_i >= 13) {
+                $next_month_i = 1;
+                $next_month_y += 1;
+            }
+            if($next_month_i < 10) $next_month_i = "0" . $next_month_i;
+
+            $next_month = $next_month_y . "-" . $next_month_i . "-01";
+
             $link = $this->connect();
-            $query = mysqli_query($link, "SELECT category_id, motion, m_time FROM JobTable WHERE user_id=" . mysqli_real_escape_string($link, $uid) . ";");
+            $query = mysqli_query($link, "SELECT category_id, motion, m_time FROM JobTable WHERE user_id=" . mysqli_real_escape_string($link, $uid) . " AND (created_at BETWEEN '" . $this_month . "' AND '" . $next_month . "');");
+            if(!$query) {
+                mysqli_close($link);
+                return 0.0;
+            }
+
+            $sum = 0.0;
+            $category = array(); // for caching.
+
+            while ($row = mysqli_fetch_assoc($query)) {
+                if(!array_key_exists($row["category_id"], $category)) {
+                    include_once __DIR__ . '/job.php';
+                    $ju = new JobUtil();
+                    $category[$row["category_id"]] = $ju->getCategoryInfo($row["category_id"]);
+                }
+
+                $sum += floatval($row["motion"]) * floatval($row["m_time"]) * $category[$row["category_id"]]["weight"];
+            }
+
+            mysqli_close($link);
+            return $sum;
+        }
+
+        
+        function getTodayJobValueSum($uid) {
+            $today = date("Y-m-d", time());
+            $tomorrow = date("Y-m-d", time() + 24* 60* 60);
+
+            $link = $this->connect();
+            $query = mysqli_query($link, "SELECT category_id, motion, m_time FROM JobTable WHERE user_id=" . mysqli_real_escape_string($link, $uid) . " AND (created_at BETWEEN '" . $today . "' AND '" . $tomorrow . "')");
             if(!$query) {
                 mysqli_close($link);
                 return 0.0;
@@ -59,7 +100,8 @@
                     "ID"=>-1,
                     "name"=>null,
                     "icon_id"=>null,
-                    "sum"=>0
+                    "sum"=>0,
+                    "today"=>0
                 );
             }
 
@@ -68,7 +110,8 @@
                     "ID"=>intval($row["unique_id"]),
                     "name"=>$row["screen_name"],
                     "icon_id"=>$row["icon_id"],
-                    "sum"=>$this->getJobValueSum($row["unique_id"])
+                    "sum"=>$this->getJobValueSum($row["unique_id"]),
+                    "today"=>$this->getTodayJobValueSum($row["unique_id"])
                 );
                 mysqli_free_result($query);
                 mysqli_close($link);
@@ -81,7 +124,8 @@
                 "ID"=>-1,
                 "name"=>null,
                 "icon_id"=>null,
-                "sum"=>0
+                "sum"=>0,
+                "today"=>0
             );
         }
 
@@ -94,7 +138,8 @@
                     "ID"=>-1,
                     "name"=>null,
                     "icon_id"=>null,
-                    "sum"=>0
+                    "sum"=>0,
+                    "today"=>0
                 );
             }
 
@@ -103,7 +148,8 @@
                     "ID"=>intval($row["unique_id"]),
                     "name"=>$row["screen_name"],
                     "icon_id"=>$row["icon_id"],
-                    "sum"=>$this->getJobValueSum($row["unique_id"])
+                    "sum"=>$this->getJobValueSum($row["unique_id"]),
+                    "today"=>$this->getTodayJobValueSum($row["unique_id"])
                 );
                 mysqli_free_result($query);
                 mysqli_close($link);
@@ -116,7 +162,8 @@
                 "ID"=>-1,
                 "name"=>null,
                 "icon_id"=>null,
-                "sum"=>0
+                "sum"=>0,
+                "today"=>0
             );
         }
 
@@ -162,7 +209,8 @@
                     "ID"=>-1,
                     "name"=>null,
                     "icon_id"=>null,
-                    "sum"=>0
+                    "sum"=>0,
+                    "today"=>0
                 );
             }
 
@@ -180,7 +228,8 @@
                     "ID"=>-1,
                     "name"=>null,
                     "icon_id"=>null,
-                    "sum"=>0
+                    "sum"=>0,
+                    "today"=>0
                 );
             }
 
@@ -189,7 +238,8 @@
                     "ID"=>intval($row["unique_id"]),
                     "name"=>$row["screen_name"],
                     "icon_id"=>$row["icon_id"],
-                    "sum"=>$this->getJobValueSum($row["unique_id"])
+                    "sum"=>$this->getJobValueSum($row["unique_id"]),
+                    "today"=>$this->getTodayJobValueSum($row["unique_id"])
                 );
                 mysqli_free_result($query);
                 mysqli_close($link);
@@ -202,7 +252,8 @@
                 "ID"=>-1,
                 "name"=>null,
                 "icon_id"=>null,
-                "sum"=>0
+                "sum"=>0,
+                "today"=>0
             );
         }
 

@@ -23,4 +23,4 @@
     include_once __DIR__ . "/../utils/job.php";
     $job = new JobUtil();
 
-    $r_mgr->returnResponse(array("histories"=>$job->getJobHistoryByUID($id)));
+    $r_mgr->returnResponse(array("histories"=>$job->getTodayJobHistoryByUID($id)));

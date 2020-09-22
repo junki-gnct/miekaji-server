@@ -87,9 +87,8 @@
             return 0;
         }
 
-        function removeFriend($token, $user) {
+        function removeFriend($token, $target_uid) {
             $uid = $this->getProfile($token)["ID"];
-            $target_uid = $this->getProfileByID($user)["ID"];
             if($target_uid == $uid) return -3;
 
             $link = $this->connect();

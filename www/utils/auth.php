@@ -44,7 +44,7 @@
         function generateUID() {
             $link = $this->connect();
             do {
-                $uid = $this->makeRandInt(18);
+                $uid = $this->makeRandInt(12);
                 $count = mysqli_num_rows(mysqli_query($link, "SELECT unique_id FROM ProfileTable WHERE unique_id=" . $uid));
             } while($count != 0);
             mysqli_close($link);
