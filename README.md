@@ -1,4 +1,5 @@
 # 見え家事 APIサーバー用スクリプト
+procon31/自由部門/見え家事のAPIサーバースクリプトです。
 ## 環境構築方法
 1. Docker 環境を構築する
 1. docker-compose.sample.ymlをdocker-compose.ymlにリネームする。
@@ -19,9 +20,7 @@ $ docker-compose stop
 
 ## 動作確認環境
 - Docker 19.03.12
-- Nginx
-- PHP 7.2
-- MySQL Server 5.7
+- Windows 10 Pro 64-bit
 
 ## APIリファレンス
 [Wiki](https://github.com/junki-gnct/miekaji-server/wiki)をご覧ください。
