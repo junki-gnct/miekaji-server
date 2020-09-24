@@ -24,3 +24,7 @@ $ docker-compose stop
 
 ## APIリファレンス
 [Wiki](https://github.com/junki-gnct/miekaji-server/wiki)をご覧ください。
+
+## 関連リンク
+- [アプリ](https://github.com/junki-gnct/miekaji-app)
+- [デバイス](https://github.com/junki-gnct/miekaji-device)
